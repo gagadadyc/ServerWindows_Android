@@ -1,0 +1,9 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <!--下拉菜单背景-->
+    <gradient
+        android:angle="135"
+        android:endColor="#333333"
+        android:startColor="#262626"
+        android:type="linear" />
+</shape>
