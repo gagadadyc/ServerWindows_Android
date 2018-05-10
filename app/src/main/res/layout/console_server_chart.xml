@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<!--服务器信息图表-->
+    <!--图表界面标题栏-->
+    <RelativeLayout
+        android:id="@+id/console_title"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="#262626"
+        >
+        <TextView
+            android:id="@+id/text_console_chart_title"
+            android:text="监控/实况"
+            android:gravity="center"
+            android:singleLine="true"
+            android:textSize="22sp"
+            android:textColor="#fff"
+            android:ellipsize="marquee"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </RelativeLayout>
+    <!--运行时间显示-->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/chat_runtime"
+        android:text="Serverx正在运行，已健康运行x小时" />
+    <!--内存-->
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/chart_memory"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+</LinearLayout>

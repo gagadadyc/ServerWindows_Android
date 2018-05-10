@@ -3,6 +3,7 @@ package com.imdyc.sw.serverwindows;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -151,6 +152,18 @@ public class ConsoleActivity extends Activity implements AdapterView.OnItemClick
 
 
         final String inner_SERVERNAME = ServerName;  //在匿名内部类中访问的外部变量需用final声明
+        //监控
+//        Intent intent = new Intent(this,ConsoleActivity.class);
+//        startActivity(intent);
+
+        popupView.findViewById(R.id.diagram).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ConsoleActivity.this,ChartActivity.class);
+                startActivity(intent);
+                popupWindow.dismiss();
+            }
+        });
 
         //重启
         popupView.findViewById(R.id.reboot).setOnClickListener(new View.OnClickListener() {

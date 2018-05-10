@@ -3,47 +3,47 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!--定义控制台的标题栏-->
-    <RelativeLayout
-        android:id="@+id/biaoti"
-        android:layout_width="match_parent"
-        android:layout_height="58dp"
-        android:background="#262626"
-        >
-        <TextView
-            android:id="@+id/text_console_title"
-            android:text="控制台"
-            android:gravity="center"
-            android:singleLine="true"
-            android:textSize="22sp"
-            android:textColor="#fff"
-            android:ellipsize="marquee"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-        <!--<Button-->
-            <!--android:id="@+id/button_backward"-->
-            <!--android:layout_width="70dp"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:drawablePadding="6dp"-->
-            <!--android:background="#262626"-->
-            <!--android:ellipsize="end"-->
+    <!--&lt;!&ndash;定义控制台的标题栏&ndash;&gt;-->
+    <!--<RelativeLayout-->
+        <!--android:id="@+id/console_title"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="58dp"-->
+        <!--android:background="#262626"-->
+        <!--&gt;-->
+        <!--<TextView-->
+            <!--android:id="@+id/text_console_title"-->
+            <!--android:text="控制台"-->
             <!--android:gravity="center"-->
-            <!--android:onClick="onClick"-->
-            <!--android:paddingLeft="5dp"-->
             <!--android:singleLine="true"-->
-            <!--android:text="返回"-->
+            <!--android:textSize="22sp"-->
             <!--android:textColor="#fff"-->
-            <!--android:textSize="18dp" />-->
+            <!--android:ellipsize="marquee"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent" />-->
+        <!--&lt;!&ndash;<Button&ndash;&gt;-->
+            <!--&lt;!&ndash;android:id="@+id/button_backward"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:layout_width="70dp"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:layout_height="match_parent"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:drawablePadding="6dp"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:background="#262626"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:ellipsize="end"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:gravity="center"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:onClick="onClick"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:paddingLeft="5dp"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:singleLine="true"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:text="返回"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:textColor="#fff"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:textSize="18dp" />&ndash;&gt;-->
 
 
-    </RelativeLayout>
+    <!--</RelativeLayout>-->
 
-    <TextView
-        android:text="Android"
-        android:textSize="28sp"
-        android:gravity="center"
-        android:layout_below="@+id/biaoti"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    <!--<TextView-->
+        <!--android:text="Android"-->
+        <!--android:textSize="28sp"-->
+        <!--android:gravity="center"-->
+        <!--android:layout_below="@+id/console_title"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent" />-->
 
 </LinearLayout>

@@ -2,9 +2,6 @@ package com.imdyc.sw.serverwindows;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -13,14 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
-import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -120,14 +109,17 @@ public class MainActivity extends AppCompatActivity
 
         // Handle the camera action
         //menu/activity_main_drawer.xml(左拉菜单)中的列表项，一项对应一行
-        if (id == R.id.nav_camera) {
-//            Toast.makeText(this,"hello",Toast.LENGTH_SHORT).show();
+        if (id == R.id.nav_console) {
+
             Intent intent = new Intent(this,ConsoleActivity.class);
             startActivity(intent);
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_security) {
 
-        } else if (id == R.id.nav_gallery) {
+            Intent intent = new Intent(this,SecurityActivity.class);
+            startActivity(intent);
+
+        } else if (id == R.id.nav_ServerQuantityManagement) {
 
 //        } else if (id == R.id.nav_manage) {
 
