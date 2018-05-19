@@ -1,5 +1,7 @@
 package com.imdyc.sw.serverwindows.bean;
 
+import java.util.List;
+
 /**
  * Created by 邓远超 on 2018/5/3.
  */
@@ -8,6 +10,7 @@ public class ServerInfo {
     private int id;
     private String Name;
     private String ip;
+    private List<MemoryInfo> memory;
 
     public ServerInfo() {
     }
@@ -34,6 +37,14 @@ public class ServerInfo {
 
     public void setIp(String ip) {
         this.ip = ip;
+    }
+
+    public List<MemoryInfo> getMemory() {
+        return memory;
+    }
+
+    public void setMemory(List<MemoryInfo> memory) {
+        this.memory = memory;
     }
 
     @Override

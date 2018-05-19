@@ -18,6 +18,7 @@ public class MyXAxisValueFormatter implements IAxisValueFormatter  {
     @Override
     public String getFormattedValue(float value, AxisBase axis) {
         // "value" represents the position of the label on the axis (x or y)
+        System.out.println(value);
         return mValues[(int) value];
     }
 

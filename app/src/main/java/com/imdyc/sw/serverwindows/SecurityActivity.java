@@ -1,6 +1,8 @@
 package com.imdyc.sw.serverwindows;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 /**

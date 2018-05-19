@@ -2,11 +2,15 @@ package com.imdyc.sw.serverwindows;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
@@ -14,16 +18,30 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.imdyc.sw.serverwindows.bean.ServerInfo;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.gson.Gson;
+import com.imdyc.sw.serverwindows.application.ResInfoApplication;
+import com.imdyc.sw.serverwindows.bean.MemoryInfo;
+import com.imdyc.sw.serverwindows.bean.ServerInfo;
+import com.imdyc.sw.serverwindows.utility.MapIntent;
+
+import org.json.JSONObject;
+
+import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,15 +56,18 @@ public class ConsoleActivity extends Activity implements AdapterView.OnItemClick
     private SimpleAdapter simpleAdapter;
     private List<Map<String, Object>> dataViewList;  //视图显示的server信息list
     private List<ServerInfo> dataReceiveList; //从服务器接收到的server信息list
-    private Button serverButton;  //服务器按钮
-    // 声明PopupWindow
-    private PopupWindow popupWindow;
 
-    // 声明PopupWindow对应的视图
-    private View popupView;
+    private PopupWindow popupWindow;// 声明PopupWindow
+    private View popupView;// 声明PopupWindow对应的视图
+    private TranslateAnimation animation;// 声明平移动画
 
-    // 声明平移动画
-    private TranslateAnimation animation;
+    private LinkedHashMap<Float, Float> memoryMap;//预加载内存数据
+    private LinkedHashMap<Float, Float>  cpuMap = new LinkedHashMap<>();//预加载cpu数据
+    private String[] values ;//定义x轴标签
+    private SimpleDateFormat format =  new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
+    private Gson gson = new Gson();
+
+
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -57,15 +78,15 @@ public class ConsoleActivity extends Activity implements AdapterView.OnItemClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.console);
 
+
         //控制台服务器列表
         listView = (ListView) findViewById(R.id.listView_Console);
         dataViewList = new ArrayList<Map<String, Object>>();
 
-
         dataReceiveList = new ArrayList<ServerInfo>();
 
         //测试数据，android&服务器连通后删
-        for (int i = 1; i <= 12; i++) {
+        for (int i = 1; i <= 2; i++) {
             ServerInfo serverInfo = new ServerInfo();
             serverInfo.setId(1);
             serverInfo.setName("Server" + i);
@@ -89,9 +110,7 @@ public class ConsoleActivity extends Activity implements AdapterView.OnItemClick
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         HashMap<String, Object> map = (HashMap<String, Object>) listView.getItemAtPosition(position);  //listview的内容装入map，positon为点击的行数。从零开始
-        Toast.makeText(ConsoleActivity.this, "map=" + map.toString() + " id=" + id, Toast.LENGTH_SHORT).show();
         RisingServerInfo((String) map.get("console_server_text"));//弹出底部菜单,参数为服务器id
-
     }
 
 
@@ -118,7 +137,7 @@ public class ConsoleActivity extends Activity implements AdapterView.OnItemClick
      **/
 
 
-    private void RisingServerInfo(String ServerName) {
+    private void RisingServerInfo(final String ServerName) {
         if (popupWindow == null) {
             //导入底部菜单的xml
             popupView = View.inflate(this, R.layout.console_botmenu, null);
@@ -152,16 +171,80 @@ public class ConsoleActivity extends Activity implements AdapterView.OnItemClick
 
 
         final String inner_SERVERNAME = ServerName;  //在匿名内部类中访问的外部变量需用final声明
-        //监控
-//        Intent intent = new Intent(this,ConsoleActivity.class);
-//        startActivity(intent);
 
+
+        //监控
         popupView.findViewById(R.id.diagram).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ConsoleActivity.this,ChartActivity.class);
-                startActivity(intent);
-                popupWindow.dismiss();
+
+                //子线程中不可执行视图相关操作，使用handler将操作送到主线程执行
+                final Handler mHandler = new Handler() {
+                    @Override
+                    public void handleMessage(Message msg) {
+                        super.handleMessage(msg);
+                        popupWindow.dismiss();
+                    }
+                };
+
+                volley_Post(ServerName);
+
+
+                //若未取回数据，则休眠等待
+                Thread thread = new Thread(){
+                    @Override
+                    public void run(){
+                        boolean threadbl = false;
+                        try {
+                            int i = 0;
+
+                            //轮询方式查找getSharedPreferences，Server无数据则继续查找
+                            while (!threadbl && getSharedPreferences("ServerWindows", Context.MODE_PRIVATE).getString("Server", "") == "") {
+                                Thread.sleep(1000);//如果找不到，则睡眠1秒钟再访问。
+                                i++;
+                                System.out.println("i="+i);
+                                if(i>10){
+                                    Looper.prepare();
+                                    Toast.makeText(ConsoleActivity.this, "访问超时", Toast.LENGTH_SHORT).show();
+                                    Looper.loop();
+                                    threadbl = Thread.interrupted();
+                                }
+                            }
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        //若线程未设置中断，则说明访问到了数据
+                        if(!threadbl) {
+                            SharedPreferences preferences=getSharedPreferences("ServerWindows", Context.MODE_PRIVATE);
+                            String serverJson=preferences.getString("Server", "");  // getString()第二个参数为缺省值，如果preference中不存在该key，将返回缺省值
+
+                            memoryMap = getSPMemMap(serverJson);
+                            values = getSPMemArr(serverJson);
+
+//                            Looper.prepare();
+//                            popupWindow.dismiss();//跳转前先将附属的窗体关闭，不然会引起窗体泄露
+//                            Looper.loop();
+
+
+                            mHandler.sendEmptyMessage(0);
+
+                            Intent intent = new Intent(ConsoleActivity.this,ChartActivity.class);
+                            intent.putExtra("ServerName", inner_SERVERNAME);
+                            MapIntent memoryMapIntent = new MapIntent();//由于Serializable不支持LinkedHashMap，所以使用实现LinkedHashMap接口的自定义类
+                            memoryMapIntent.setMap(memoryMap);
+                            intent.putExtra("memoryMapIntent",memoryMapIntent);
+                            intent.putExtra("values",values);
+
+                            Looper.prepare();
+                            startActivity(intent);
+                            Looper.loop();
+
+//
+
+                        }
+                    }
+                };
+                thread.start();
             }
         });
 
@@ -225,29 +308,84 @@ public class ConsoleActivity extends Activity implements AdapterView.OnItemClick
         popupWindow.showAtLocation(this.findViewById(R.id.console_botmenu_re), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
         popupView.startAnimation(animation);
     }
+    /**
+     * 取得存放在SharedPreferences中的信息
+     */
+    private LinkedHashMap<Float, Float> getSPMemMap(String serverJson) {
+
+        //Json反序列化
+        ServerInfo serverInfo = gson.fromJson(serverJson, ServerInfo.class);
+        List<MemoryInfo> memoryList = serverInfo.getMemory();
+
+        memoryMap = new LinkedHashMap();
+
+        int i = 0;
+        Iterator<MemoryInfo> iterator = memoryList.iterator();
+        //迭代memoryList，并装填内存数据
+        while (iterator.hasNext()){
+            MemoryInfo momoryInfo = iterator.next();
+            memoryMap.put((float)i,Float.parseFloat(momoryInfo.getUsed_Percent())); //将内存百分比转为float
+
+        }
+
+        return memoryMap;
+    }
+    private String[] getSPMemArr(String serverJson){
+        ServerInfo serverInfo = gson.fromJson(serverJson, ServerInfo.class);
+        List<MemoryInfo> memoryList = serverInfo.getMemory(); //接收数据
+
+        values = new String[memoryList.size()];  //接收时间作为x轴坐标
+
+        int i = 0;
+        Iterator<MemoryInfo> iterator = memoryList.iterator();
+        //迭代memoryList，并装填内存时间轴
+        while (iterator.hasNext()){
+            MemoryInfo momoryInfo = iterator.next();
+            SimpleDateFormat sdf=new SimpleDateFormat("HH:mm:ss");
+            values[i]=sdf.format(momoryInfo.getTime());
+            i++;
+        }
+        return values;
+    }
+
+    /**
+     * 向服务器提交Post请求
+     * @param serverName 请求哪个服务器的信息
+     */
+
+    private void volley_Post(String serverName) {
+
+        String url = "http://192.168.0.107:8080/sw/ResInfo";
+        //请求数据
+        HashMap<String,String> RequstMap = new HashMap<String,String>();
+        RequstMap.put("serverName",serverName);
+
+        JSONObject jsonObject = new JSONObject(RequstMap);
+        JsonObjectRequest JOrequest = new JsonObjectRequest(Request.Method.POST,url,jsonObject,new Response.Listener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject arg0) {
+
+                //获取存储文件
+                SharedPreferences sharedPreferences = getSharedPreferences("ServerWindows", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("Server",arg0.toString());//将Json格式的服务器数据存入SharedPreferences中
+                editor.commit();
+            }
+        },new Response.ErrorListener(){
+            @Override
+            public void onErrorResponse(VolleyError arg0){
+                Toast.makeText(ConsoleActivity.this,arg0.toString()+"请求失败",Toast.LENGTH_SHORT).show();
+            }
+        });
+        JOrequest.setTag("ServerInfoPost");
+
+        ResInfoApplication.getHttpQueues().add(JOrequest);
+    }
 
 
-//    public void onClick(View view) {
-//        switch (view.getId()) {
-//            case R.id.rlIcon:
-//                // TODO 弹出popupwind选择拍照或者从相册选择
-//                changeIcon(view);
-//                lightoff();
-//                break;
-//        }
 
-    //点击按钮弹出底部窗口
-//        LayoutInflater inflater=(LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);  //使用LayoutInflater寻找layout下的xml文件
-//        View console_server_icon_v = inflater.inflate(R.layout.console_server_icon, null);  //将指定的xml文件转换成view对象
-//        serverButton = (Button) console_server_icon_v.findViewById(R.id.console_server_button);  //使用完整形式实例化Button
-//        serverButton.setOnClickListener(new View.OnClickListener() {
-//            //重写点击事件的处理方法onClick()
-//            @Override
-//            public void onClick(View v) {
-//                //显示Toast信息
-//                System.out.println(getApplicationContext()+"++++++++++++++++++++++++++++++++++++233333333333333333333333333333333333333");
-//                Toast.makeText(getApplicationContext(), "你点击了按钮", Toast.LENGTH_SHORT).show();
-//            }
-//        });
+
+
 
 }
