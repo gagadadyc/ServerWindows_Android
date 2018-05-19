@@ -90,38 +90,38 @@ public class ChartActivity extends Activity {
 
         //装填X轴时间标签
         String[] values = intent.getStringArrayExtra("values");
-        values = new String[] {"1:00","2:00","3:00","4:00","5:00"};
+//        values = new String[] {"1:00","2:00","3:00","4:00","5:00"};
 
         xAxis.setValueFormatter(new MyXAxisValueFormatter(values));
 
         //装填memoryMap数据
         MapIntent mi = (MapIntent) intent.getSerializableExtra("memoryMapIntent");
         memoryMap = mi.getMap();
-
+        System.out.println("mapcd:"+memoryMap.size());
+        System.out.println("valcd:"+values.length);
 
         //将内存数据注入List<Entry>（图表显示的数据）中。
         List<Entry> entriesM = loadList(memoryMap);
 
-//        List<Entry> entriesM = new ArrayList<>();
-        List<Entry> entriesC = new ArrayList<>();
+//        List<Entry> entriesC = new ArrayList<>();
 //
 //        Iterator<LinkedHashMap.Entry<Float,Float>> iteratorM = memoryMap.entrySet().iterator();
-        Iterator<LinkedHashMap.Entry<Float,Float>> iteratorC = cpuMap.entrySet().iterator();
+//        Iterator<LinkedHashMap.Entry<Float,Float>> iteratorC = cpuMap.entrySet().iterator();
 
-        //迭代CPU数据集，并装填CPU数据
-        while (iteratorC.hasNext()){
-            LinkedHashMap.Entry<Float,Float> entry = iteratorC.next();
-
-            float f1 = entry.getKey();
-            float f2 = entry.getValue();
-
-            entriesC.add(new Entry(f1,f2));
-        }
+//        //迭代CPU数据集，并装填CPU数据
+//        while (iteratorC.hasNext()){
+//            LinkedHashMap.Entry<Float,Float> entry = iteratorC.next();
+//
+//            float f1 = entry.getKey();
+//            float f2 = entry.getValue();
+//
+//            entriesC.add(new Entry(f1,f2));
+//        }
 //
         LineDataSet dataSetM = new LineDataSet(entriesM,"内存占用百分比");
 //        LineDataSet dataSetC = new LineDataSet(entriesC,"CPU占用百分比");
         dataSetM.setColor(Color.RED);
-//        dataSetM.setValueTextColor(Color.rgb(0,40,80));
+        dataSetM.setValueTextColor(Color.rgb(0,40,80));
 //        dataSetC.setColor(Color.BLUE);
 //        dataSetC.setValueTextColor(Color.rgb(240,20,20));
 

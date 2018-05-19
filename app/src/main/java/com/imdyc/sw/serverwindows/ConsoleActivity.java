@@ -325,7 +325,7 @@ public class ConsoleActivity extends Activity implements AdapterView.OnItemClick
         while (iterator.hasNext()){
             MemoryInfo momoryInfo = iterator.next();
             memoryMap.put((float)i,Float.parseFloat(momoryInfo.getUsed_Percent())); //将内存百分比转为float
-
+            i++;
         }
 
         return memoryMap;
