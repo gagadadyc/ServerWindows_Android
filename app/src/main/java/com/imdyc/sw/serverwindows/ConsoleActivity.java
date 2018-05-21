@@ -32,11 +32,11 @@ import com.google.gson.Gson;
 import com.imdyc.sw.serverwindows.application.ResInfoApplication;
 import com.imdyc.sw.serverwindows.bean.MemoryInfo;
 import com.imdyc.sw.serverwindows.bean.ServerInfo;
+import com.imdyc.sw.serverwindows.bean.SysPoint;
 import com.imdyc.sw.serverwindows.utility.MapIntent;
 
 import org.json.JSONObject;
 
-import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,6 +44,8 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 
 /**
  * Created by 邓远超 on 2018/5/3.
@@ -52,10 +54,12 @@ import java.util.Map;
 public class ConsoleActivity extends Activity implements AdapterView.OnItemClickListener {
 
 
+    private List<SysPoint> sysPointList;//从MainActivity传来的服务器信息
+
     private ListView listView;
     private SimpleAdapter simpleAdapter;
     private List<Map<String, Object>> dataViewList;  //视图显示的server信息list
-    private List<ServerInfo> dataReceiveList; //从服务器接收到的server信息list
+    private ArrayList<SysPoint> dataReceiveList; //从服务器接收到的server信息list
 
     private PopupWindow popupWindow;// 声明PopupWindow
     private View popupView;// 声明PopupWindow对应的视图
@@ -78,29 +82,71 @@ public class ConsoleActivity extends Activity implements AdapterView.OnItemClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.console);
 
+        Intent intent = getIntent();
 
         //控制台服务器列表
+//        sysPointList = (ArrayList<SysPoint>) intent.getSerializableExtra("sysPointList");//获取服务器信息
         listView = (ListView) findViewById(R.id.listView_Console);
-        dataViewList = new ArrayList<Map<String, Object>>();
 
-        dataReceiveList = new ArrayList<ServerInfo>();
+        dataReceiveList = (ArrayList<SysPoint>) intent.getSerializableExtra("sysPointList");//获取服务器信息
+//        dataReceiveList = sysPointList;
 
-        //测试数据，android&服务器连通后删
-        for (int i = 1; i <= 2; i++) {
-            ServerInfo serverInfo = new ServerInfo();
-            serverInfo.setId(1);
-            serverInfo.setName("Server" + i);
-            serverInfo.setIp("172.168.0." + i);
-            dataReceiveList.add(serverInfo);
-        }
+        //通过迭代方式将serverMap中的信息传到dataReceiveList中
+//        Iterator<Map.Entry<String,SysPoint>> iterator = serverMap.entrySet().iterator();
+//        while(iterator.hasNext()){
+//            SysPoint sysPoint = new SysPoint();
+//            Map.Entry<String,SysPoint> entry = iterator.next();
+//
+//            System.out.println("entry"+entry.getValue());/////////
+//
+//            sysPoint = entry.getValue();
+////            sysPoint.setHost(entry.getKey());
+////
+////            sysPoint.setN_cpus(entry.getValue().getN_cpus());
+////            sysPoint.setN_users(entry.getValue().getN_users());
+////            sysPoint.setUptime_format(entry.getValue().getUptime_format());
+//            dataReceiveList.add(sysPoint);
+//        }
+
+
+//        //测试数据，android&服务器连通后删
+//        for (int i = 1; i <= 2; i++) {
+//            ServerInfo serverInfo = new ServerInfo();
+//            serverInfo.setId(1);
+//            serverInfo.setName("Server" + i);
+//            serverInfo.setIp("172.168.0." + i);
+//            dataReceiveList.add(serverInfo);
+//        }
+
 
         simpleAdapter = new SimpleAdapter(this, getData(dataReceiveList), R.layout.console_server_icon,
-                new String[]{"console_server_icon", "console_server_text", "console_server_ip"},
-                new int[]{R.id.console_server_icon, R.id.console_server_text, R.id.console_server_ip});
+                new String[]{"console_server_icon", "console_server_text", "console_server_uptime",
+                        "console_server_ncpus","console_server_nusers"},
+                new int[]{R.id.console_server_icon, R.id.console_server_text, R.id.console_server_uptime,
+                        R.id.console_server_ncpus,R.id.console_server_nusers});
         listView.setAdapter(simpleAdapter);
-
         listView.setOnItemClickListener(this);
+    }
 
+    //将服务器传过来的主机信息包装成List
+    private List<Map<String, Object>> getData(ArrayList<SysPoint> ServerInfo) {
+
+        //服务器个数
+        int ServerCon = ServerInfo.size();
+
+        dataViewList = new ArrayList<>();
+        for (int i = 0; i < ServerCon; i++) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("console_server_icon", R.mipmap.ic_launcher);
+            map.put("console_server_text", ServerInfo.get(i).getHost());  //服务器名
+            map.put("console_server_uptime", ServerInfo.get(i).getUptime_format());  //运行时间
+            map.put("console_server_ncpus", (int)Float.parseFloat(ServerInfo.get(i).getN_cpus()));  //核心数
+            map.put("console_server_nusers", (int)Float.parseFloat(ServerInfo.get(i).getN_users()));  //用户数
+//            map.put("console_server_ip",ServerInfo.get(i).getIp());
+
+            dataViewList.add(map);
+        }
+        return dataViewList;
     }
 
     /**
@@ -111,25 +157,6 @@ public class ConsoleActivity extends Activity implements AdapterView.OnItemClick
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         HashMap<String, Object> map = (HashMap<String, Object>) listView.getItemAtPosition(position);  //listview的内容装入map，positon为点击的行数。从零开始
         RisingServerInfo((String) map.get("console_server_text"));//弹出底部菜单,参数为服务器id
-    }
-
-
-    //将服务器传过来的主机信息包装成List
-    private List<Map<String, Object>> getData(List<ServerInfo> ServerInfo) {
-
-
-        //服务器个数
-        int ServerCon = ServerInfo.size();
-
-        for (int i = 1; i <= ServerCon; i++) {
-            Map<String, Object> map = new HashMap<String, Object>();
-            map.put("console_server_icon", R.mipmap.ic_launcher);
-            map.put("console_server_text", "  " + ServerInfo.get(i - 1).getName());
-            map.put("console_server_ip", "  " + ServerInfo.get(i - 1).getIp());
-
-            dataViewList.add(map);
-        }
-        return dataViewList;
     }
 
     /**
@@ -178,6 +205,7 @@ public class ConsoleActivity extends Activity implements AdapterView.OnItemClick
             @Override
             public void onClick(View v) {
 
+
                 //子线程中不可执行视图相关操作，使用handler将操作送到主线程执行
                 final Handler mHandler = new Handler() {
                     @Override
@@ -191,7 +219,7 @@ public class ConsoleActivity extends Activity implements AdapterView.OnItemClick
 
 
                 //若未取回数据，则休眠等待
-                Thread thread = new Thread(){
+                Thread thread2 = new Thread(){
                     @Override
                     public void run(){
                         boolean threadbl = false;
@@ -202,7 +230,6 @@ public class ConsoleActivity extends Activity implements AdapterView.OnItemClick
                             while (!threadbl && getSharedPreferences("ServerWindows", Context.MODE_PRIVATE).getString("Server", "") == "") {
                                 Thread.sleep(1000);//如果找不到，则睡眠1秒钟再访问。
                                 i++;
-                                System.out.println("i="+i);
                                 if(i>10){
                                     Looper.prepare();
                                     Toast.makeText(ConsoleActivity.this, "访问超时", Toast.LENGTH_SHORT).show();
@@ -221,20 +248,18 @@ public class ConsoleActivity extends Activity implements AdapterView.OnItemClick
                             memoryMap = getSPMemMap(serverJson);
                             values = getSPMemArr(serverJson);
 
-//                            Looper.prepare();
-//                            popupWindow.dismiss();//跳转前先将附属的窗体关闭，不然会引起窗体泄露
-//                            Looper.loop();
 
 
-                            mHandler.sendEmptyMessage(0);
 
                             Intent intent = new Intent(ConsoleActivity.this,ChartActivity.class);
                             intent.putExtra("ServerName", inner_SERVERNAME);
                             MapIntent memoryMapIntent = new MapIntent();//由于Serializable不支持LinkedHashMap，所以使用实现LinkedHashMap接口的自定义类
-                            memoryMapIntent.setMap(memoryMap);
+                            memoryMapIntent.setLinkedHashMap(memoryMap);
                             intent.putExtra("memoryMapIntent",memoryMapIntent);
                             intent.putExtra("values",values);
 
+                            //跳转前先将附属的窗体关闭，不然会引起窗体泄露
+                            mHandler.sendEmptyMessage(0);
                             Looper.prepare();
                             startActivity(intent);
                             Looper.loop();
@@ -244,7 +269,7 @@ public class ConsoleActivity extends Activity implements AdapterView.OnItemClick
                         }
                     }
                 };
-                thread.start();
+                thread2.start();
             }
         });
 
@@ -355,7 +380,8 @@ public class ConsoleActivity extends Activity implements AdapterView.OnItemClick
 
     private void volley_Post(String serverName) {
 
-        String url = "http://192.168.0.107:8080/sw/ResInfo";
+        Toast.makeText(ConsoleActivity.this, "数据正在拉取,请稍后", Toast.LENGTH_SHORT).show();
+        String url = "http://192.168.0.101:8080/sw/ResInfo";
         //请求数据
         HashMap<String,String> RequstMap = new HashMap<String,String>();
         RequstMap.put("serverName",serverName);

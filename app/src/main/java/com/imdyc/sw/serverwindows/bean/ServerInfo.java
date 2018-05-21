@@ -4,6 +4,7 @@ import java.util.List;
 
 /**
  * Created by 邓远超 on 2018/5/3.
+ * 存放服务器时序信息,图表显示数据
  */
 public class ServerInfo {
 

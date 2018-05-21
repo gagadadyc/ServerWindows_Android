@@ -1,17 +1,10 @@
 package com.imdyc.sw.serverwindows;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -20,22 +13,15 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.google.gson.Gson;
-import com.imdyc.sw.serverwindows.application.ResInfoApplication;
-import com.imdyc.sw.serverwindows.bean.MemoryInfo;
-import com.imdyc.sw.serverwindows.bean.ServerInfo;
 import com.imdyc.sw.serverwindows.chartsetting.MyXAxisValueFormatter;
 import com.imdyc.sw.serverwindows.chartsetting.MyYAxisValueFormatter;
 import com.imdyc.sw.serverwindows.utility.MapIntent;
 
-import org.json.JSONObject;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by 邓远超 on 2018/5/8.
@@ -96,9 +82,7 @@ public class ChartActivity extends Activity {
 
         //装填memoryMap数据
         MapIntent mi = (MapIntent) intent.getSerializableExtra("memoryMapIntent");
-        memoryMap = mi.getMap();
-        System.out.println("mapcd:"+memoryMap.size());
-        System.out.println("valcd:"+values.length);
+        memoryMap = mi.getLinkedHashMap();
 
         //将内存数据注入List<Entry>（图表显示的数据）中。
         List<Entry> entriesM = loadList(memoryMap);

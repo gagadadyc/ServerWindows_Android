@@ -1,46 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
+    android:orientation="horizontal"
     android:weightSum="1">
 
 
     <!--服务器图标暂时为小机器人图标-->
-        <ImageView
-            android:id="@+id/console_server_icon"
-            android:layout_marginLeft="15dp"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:src="@mipmap/ic_launcher"
-            />
+    <ImageView
+        android:id="@+id/console_server_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:src="@mipmap/ic_launcher" />
 
+    <TextView
+        android:id="@+id/fwqm_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/console_server_icon"
+        android:text="name:"
+        android:textColor="#006699"
+        android:textSize="18sp" />
 
-        <TextView
-            android:id="@+id/console_server_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/console_server_icon"
-            android:textSize="20sp"
-            android:textColor="#000000"
-            android:text="demo"
-            />
+    <TextView
+        android:id="@+id/console_server_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/fwqm_text"
+        android:text="demo"
+        android:textColor="#000000"
+        android:textSize="18sp" />
+    <!--运行时间在服务器名右方-->
+    <TextView
+        android:id="@+id/uptime_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="运行时间:"
+        android:textColor="#006699"
+        android:textSize="18sp"
+        android:layout_below="@+id/fwqm_text"
+        android:layout_toEndOf="@+id/ncpus_text" />
 
-        <TextView
-            android:id="@+id/console_server_ip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/console_server_text"
-            android:layout_alignParentRight="true"
-            android:textSize="18sp"
-            android:textColor="#000000"
-            android:text="ip" />
+    <TextView
+        android:id="@+id/console_server_uptime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="38 days,  9:37"
+        android:textColor="#50A315"
+        android:textSize="18sp"
+        android:layout_alignTop="@+id/uptime_text"
+        android:layout_toEndOf="@+id/uptime_text" />
 
-        <!--<Button-->
-            <!--android:id="@+id/console_server_button"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_alignParentRight="true"-->
-            <!--android:text="服务器操作" />-->
+    <!--cpu核心数在服务器名下方-->
+    <TextView
+        android:id="@+id/console_server_ncpus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        android:layout_below="@+id/fwqm_text"
+        android:layout_toEndOf="@+id/console_server_icon" />
+    <TextView
+        android:id="@+id/ncpus_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="核     "
+        android:textColor="#006699"
+        android:textSize="18sp"
+        android:layout_below="@+id/fwqm_text"
+        android:layout_toEndOf="@+id/console_server_ncpus" />
+
+    <!--用户数在cpu右方-->
+    <TextView
+        android:id="@+id/console_server_nusers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="3"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/nusers_text" />
+    <TextView
+        android:id="@+id/nusers_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="用户在线 "
+        android:textColor="#006699"
+        android:textSize="18sp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true" />
+
+    <!--&lt;!&ndash;IP在用户数名右方&ndash;&gt;-->
+    <!--<TextView-->
+        <!--android:id="@+id/ip_text"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="ip:"-->
+        <!--android:textColor="#006699"-->
+        <!--android:textSize="18sp"-->
+        <!--android:layout_below="@+id/uptime_text"-->
+        <!--android:layout_toEndOf="@+id/nusers_text"/>-->
+    <!--<TextView-->
+        <!--android:id="@+id/console_server_ip"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="192.168.0.1"-->
+        <!--android:textColor="#000000"-->
+        <!--android:textSize="18sp"-->
+        <!--android:layout_below="@+id/uptime_text"-->
+        <!--android:layout_toEndOf="@+id/ip_text" />-->
+    <!--<Button-->
+    <!--android:id="@+id/console_server_button"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignParentRight="true"-->
+    <!--android:text="服务器操作" />-->
 
 </RelativeLayout>
