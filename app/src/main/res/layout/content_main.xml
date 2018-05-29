@@ -17,4 +17,5 @@
         <!--android:id="@+id/listView_Console"-->
         <!--android:layout_alignParentTop="true"-->
         <!--android:layout_alignParentStart="true"/>-->
+
 </RelativeLayout>

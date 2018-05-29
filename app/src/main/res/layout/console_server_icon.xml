@@ -81,9 +81,9 @@
         android:textColor="#000000"
         android:textSize="18sp"
         android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@+id/nusers_text" />
+        android:layout_toLeftOf="@+id/del_text" />
     <TextView
-        android:id="@+id/nusers_text"
+        android:id="@+id/del_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="用户在线 "
@@ -91,31 +91,5 @@
         android:textSize="18sp"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true" />
-
-    <!--&lt;!&ndash;IP在用户数名右方&ndash;&gt;-->
-    <!--<TextView-->
-        <!--android:id="@+id/ip_text"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="ip:"-->
-        <!--android:textColor="#006699"-->
-        <!--android:textSize="18sp"-->
-        <!--android:layout_below="@+id/uptime_text"-->
-        <!--android:layout_toEndOf="@+id/nusers_text"/>-->
-    <!--<TextView-->
-        <!--android:id="@+id/console_server_ip"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="192.168.0.1"-->
-        <!--android:textColor="#000000"-->
-        <!--android:textSize="18sp"-->
-        <!--android:layout_below="@+id/uptime_text"-->
-        <!--android:layout_toEndOf="@+id/ip_text" />-->
-    <!--<Button-->
-    <!--android:id="@+id/console_server_button"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_alignParentRight="true"-->
-    <!--android:text="服务器操作" />-->
 
 </RelativeLayout>

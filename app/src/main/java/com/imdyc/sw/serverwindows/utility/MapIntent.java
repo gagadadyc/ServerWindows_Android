@@ -29,7 +29,4 @@ public class MapIntent  implements Serializable {
         return Map;
     }
 
-
-
-
 }

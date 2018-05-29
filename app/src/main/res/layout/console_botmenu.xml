@@ -30,7 +30,7 @@
             android:layout_margin="10dp"
             android:gravity="center"
             android:padding="10dp"
-            android:text="监控/实况"
+            android:text="内存/CPU"
             android:textStyle="bold"
             android:textSize="20sp" />
 
@@ -42,7 +42,7 @@
             android:layout_marginTop="30dp"
             android:gravity="center"
             android:padding="10dp"
-            android:text="重启"
+            android:text="磁盘I/O"
             android:textStyle="bold"
             android:textSize="20sp" />
 
@@ -53,7 +53,7 @@
             android:layout_margin="10dp"
             android:gravity="center"
             android:padding="10dp"
-            android:text="关机"
+            android:text="进程状态"
             android:textStyle="bold"
             android:textSize="20sp" />
 

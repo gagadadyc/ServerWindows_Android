@@ -31,16 +31,34 @@
                 android:label="@string/app_name">
             </activity>
 
-                <!--由 控制台-底部菜单-监控/实况 进入的 服务器信息图表-->
+                <!--由 控制台-底部菜单-监控/实况 进入的 内存、cpu信息图表-->
                 <activity
-                    android:name=".ChartActivity"
-                    android:label="监控/实况">
+                    android:name=".MCChartActivity"
+                    android:label="内存/CPU">
+                </activity>
+
+                <!--由 控制台-底部菜单-监控/实况 进入的 磁盘信息图表-->
+                <activity
+                    android:name=".DiskChartActivity"
+                    android:label="磁盘I/O">
+                </activity>
+
+                <!--由 控制台-底部菜单-监控/实况 进入的 进程信息图表-->
+                <activity
+                    android:name=".ProcessActivity"
+                    android:label="进程信息">
                 </activity>
 
             <!--由 侧栏菜单 进入的安全中心-->
             <activity
                 android:name=".SecurityActivity"
                 android:label="安全中心">
+            </activity>
+
+            <!--由 侧栏菜单 进入的添加/删除服务器-->
+            <activity
+                android:name=".AddAndDelActivity"
+                android:label="删除/添加服务器">
             </activity>
 
 

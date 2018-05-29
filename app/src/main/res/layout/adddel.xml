@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--定义控制台的标题栏-->
+    <RelativeLayout
+        android:id="@+id/console_title"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="#262626"
+        >
+        <TextView
+            android:id="@+id/text_adddel_title"
+            android:text="服务器管理"
+            android:gravity="center"
+            android:singleLine="true"
+            android:textSize="22sp"
+            android:textColor="#fff"
+            android:ellipsize="marquee"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <TextView
+            android:id="@+id/adddel_add"
+            android:text="添加"
+            android:gravity="right|center_vertical"
+            android:singleLine="true"
+            android:textSize="22sp"
+            android:textColor="#fff"
+            android:ellipsize="marquee"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true" />
+
+    </RelativeLayout>
+
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/listView_adddel"
+        android:layout_alignParentTop="true"/>
+
+
+
+
+
+</LinearLayout>
