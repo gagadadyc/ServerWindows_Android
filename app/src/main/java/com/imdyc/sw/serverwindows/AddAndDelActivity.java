@@ -53,6 +53,8 @@ public class AddAndDelActivity extends Activity implements AdapterView.OnItemCli
 
         //控制台服务器列表
 //        sysPointList = (ArrayList<SysPoint>) intent.getSerializableExtra("sysPointList");//获取服务器信息
+
+
         listView = (ListView) findViewById(R.id.listView_adddel);
 
         dataReceiveList = (ArrayList<SysPoint>) intent.getSerializableExtra("sysPointList");//获取服务器信息
@@ -64,10 +66,9 @@ public class AddAndDelActivity extends Activity implements AdapterView.OnItemCli
         listView.setOnItemClickListener(this);
 
         TextView textView = (TextView) findViewById(R.id.adddel_add);
-        textView.setOnClickListener(new View.OnClickListener(){
+        textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(AddAndDelActivity.this, "拉取可添加服务器列表", Toast.LENGTH_SHORT).show();
                 RisingServerInfo();//弹出底部菜单,参数为服务器id
             }
         });
@@ -84,12 +85,11 @@ public class AddAndDelActivity extends Activity implements AdapterView.OnItemCli
         for (int i = 0; i < ServerCon; i++) {
 
             SharedPreferences preferences = getSharedPreferences("ServerWindows", Context.MODE_PRIVATE);
-            String serverJson=preferences.getString("sysConfirmMap", "");  // 取出确认表
-            Map<String, Object> confirmMap = new Gson().fromJson(serverJson,Map.class);
-
+            String serverJson = preferences.getString("sysConfirmMap", "");  // 取出确认表
+            Map<String, Object> confirmMap = new Gson().fromJson(serverJson, Map.class);
 
             //如果map中存在该主机名作为key的键值对，并且value为false，则跳过此次循环（不加入显示列表）
-            if(confirmMap !=null && confirmMap.containsKey(ServerInfo.get(i).getHost()) && !(boolean)confirmMap.get(ServerInfo.get(i).getHost())){
+            if (confirmMap != null && confirmMap.containsKey(ServerInfo.get(i).getHost()) && !(boolean) confirmMap.get(ServerInfo.get(i).getHost())) {
                 continue;
             }
             Map<String, Object> map = new HashMap<>();
@@ -112,33 +112,34 @@ public class AddAndDelActivity extends Activity implements AdapterView.OnItemCli
         confirm((String) map.get("console_server_text"));
     }
 
-    private void confirm(final String serverName){
+    private void confirm(final String serverName) {
         //点击删除后向用户弹出确认对话框
-                AlertDialog.Builder builder = new AlertDialog.Builder(AddAndDelActivity.this);
-                builder.setPositiveButton("确定",new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int a){
-                        Map<String,Boolean> map = new HashMap<>();
-                        map.put(serverName,false);
-                        //转成json格式易于存储
-                        Gson gson = new Gson();
-                        String jsonStr = gson.toJson(map);
-                        //写入删除标记
-                        SharedPreferences sharedPreferences = getSharedPreferences("ServerWindows", Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putString("sysConfirmMap",jsonStr);//将Json格式的服务器数据存入SharedPreferences中
-                        editor.apply();
-                        Toast.makeText(AddAndDelActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
-                    }
-                });
-                builder.setNegativeButton("取消",new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int a){
-                    }
-                });
-                builder.setTitle("重要信息");
-                builder.setMessage("确认删除服务器："+ serverName +"吗？");
-                builder.show();
+        AlertDialog.Builder builder = new AlertDialog.Builder(AddAndDelActivity.this);
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int a) {
+                Map<String, Boolean> map = new HashMap<>();
+                map.put(serverName, false);
+                //转成json格式易于存储
+                Gson gson = new Gson();
+                String jsonStr = gson.toJson(map);
+                //写入删除标记
+                SharedPreferences sharedPreferences = getSharedPreferences("ServerWindows", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("sysConfirmMap", jsonStr);//将Json格式的服务器数据存入SharedPreferences中
+                editor.apply();
+                onCreate(null);//刷新界面
+                Toast.makeText(AddAndDelActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
+            }
+        });
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int a) {
+            }
+        });
+        builder.setTitle("重要信息");
+        builder.setMessage("确认删除服务器：" + serverName + "吗？");
+        builder.show();
     }
 
     private void RisingServerInfo() {
@@ -164,13 +165,61 @@ public class AddAndDelActivity extends Activity implements AdapterView.OnItemCli
         animation.setInterpolator(new AccelerateInterpolator());
         animation.setDuration(300);//平移动画过程为300毫秒
 // ////
-        ListView listViewBot = (ListView) findViewById(R.id.listView_adddel_bot);
 
-        simpleAdapter = new SimpleAdapter(this, getData(dataReceiveList), R.layout.console_server_icon,
-                new String[]{"console_server_text"},
-                new int[]{ R.id.console_server_text});
-        listViewBot.setAdapter(simpleAdapter);
-        listViewBot.setOnItemClickListener(this);
+        //添加
+        popupView.findViewById(R.id.diagram_v).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Map<String, Boolean> map = new HashMap<>();
+                map.put("VM_70_21_centos", true);
+                //转成json格式易于存储
+                Gson gson = new Gson();
+                String jsonStr = gson.toJson(map);
+                //写入删除标记
+                SharedPreferences sharedPreferences = getSharedPreferences("ServerWindows", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("sysConfirmMap", jsonStr);//将Json格式的服务器数据存入SharedPreferences中
+                editor.apply();
+                new Thread() {
+                    @Override
+                    public void run() {
+                        super.run();
+                        try {
+                            Thread.sleep(500);//休眠0.5秒
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        /**
+                         * 要执行的操作
+                         */
+                    }
+                }.start();
+                onCreate(null);//刷新界面
+                popupWindow.dismiss();
+                Toast.makeText(AddAndDelActivity.this, "添加成功", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+        popupView.findViewById(R.id.diagram_i).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Map<String, Boolean> map = new HashMap<>();
+                map.put("iz3bm6o874hlnaz", true);
+                //转成json格式易于存储
+                Gson gson = new Gson();
+                String jsonStr = gson.toJson(map);
+                //写入删除标记
+                SharedPreferences sharedPreferences = getSharedPreferences("ServerWindows", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("sysConfirmMap", jsonStr);//将Json格式的服务器数据存入SharedPreferences中
+                editor.apply();
+                onCreate(null);//刷新界面
+                popupWindow.dismiss();
+                Toast.makeText(AddAndDelActivity.this, "添加成功", Toast.LENGTH_SHORT).show();
+
+            }
+        });
 
 //////
         // 在点击之后设置popupwindow的销毁
@@ -178,7 +227,7 @@ public class AddAndDelActivity extends Activity implements AdapterView.OnItemCli
             popupWindow.dismiss();
         }
         // 设置popupWindow的显示位置，此处是在手机屏幕底部且水平居中的位置
-        popupWindow.showAtLocation(this.findViewById(R.id.console_botmenu_re), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+        popupWindow.showAtLocation(findViewById(R.id.adddel_re), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
         popupView.startAnimation(animation);
     }
 }

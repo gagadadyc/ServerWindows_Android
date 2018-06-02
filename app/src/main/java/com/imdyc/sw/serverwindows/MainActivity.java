@@ -166,10 +166,9 @@ public class MainActivity extends AppCompatActivity
                     int i = 0;
                    //轮询方式查找getSharedPreferences，Server无数据则继续查找
                     while (!threadbl && getSharedPreferences("ServerWindows", Context.MODE_PRIVATE).getString("sysPointList", "") == "") {
-                        Thread.sleep(100);//如果找不到，则休眠100毫秒再访问。
+                        Thread.sleep(500);//如果找不到，则休眠100毫秒再访问。
                         i++;
-                        System.out.println("i:"+i);
-                        if(i>100){
+                        if(i>20){
                             Looper.prepare();
                             Toast.makeText(MainActivity.this, "访问超时", Toast.LENGTH_SHORT).show();
                             Looper.loop();
@@ -219,10 +218,9 @@ public class MainActivity extends AppCompatActivity
                     int i = 0;
                     //轮询方式查找getSharedPreferences，Server无数据则继续查找
                     while (!threadbl && getSharedPreferences("ServerWindows", Context.MODE_PRIVATE).getString("sysPointList", "") == "") {
-                        Thread.sleep(100);//如果找不到，则休眠100毫秒再访问。
+                        Thread.sleep(500);//如果找不到，则休眠500毫秒再访问。
                         i++;
-                        System.out.println("i:"+i);
-                        if(i>100){
+                        if(i>20){
                             Looper.prepare();
                             Toast.makeText(MainActivity.this, "访问超时", Toast.LENGTH_SHORT).show();
                             Looper.loop();
@@ -258,6 +256,8 @@ public class MainActivity extends AppCompatActivity
         };
         thread1.start();
     }
+
+
 
 
 }

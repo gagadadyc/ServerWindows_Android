@@ -111,6 +111,16 @@ public class ConsoleActivity extends Activity implements AdapterView.OnItemClick
 
         dataViewList = new ArrayList<>();
         for (int i = 0; i < ServerCon; i++) {
+
+            SharedPreferences preferences = getSharedPreferences("ServerWindows", Context.MODE_PRIVATE);
+            String serverJson = preferences.getString("sysConfirmMap", "");  // 取出确认表
+            Map<String, Object> confirmMap = new Gson().fromJson(serverJson, Map.class);
+
+            //如果map中存在该主机名作为key的键值对，并且value为false，则跳过此次循环（不加入显示列表）
+            if (confirmMap != null && confirmMap.containsKey(ServerInfo.get(i).getHost()) && !(boolean) confirmMap.get(ServerInfo.get(i).getHost())) {
+                continue;
+            }
+
             Map<String, Object> map = new HashMap<>();
             map.put("console_server_icon", R.mipmap.ic_launcher);
             map.put("console_server_text", ServerInfo.get(i).getHost());  //服务器名
@@ -126,7 +136,6 @@ public class ConsoleActivity extends Activity implements AdapterView.OnItemClick
 
     /**
      * listview的监听器，点击其中一行时，弹出该行对应服务器的菜单
-     * 菜单内容有：关机，重启，折线图
      */
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -417,7 +426,7 @@ public class ConsoleActivity extends Activity implements AdapterView.OnItemClick
     }
 
     /**
-     * 自定义磁盘图表x轴标签
+     * 自定义线程图表x轴标签
      * @param serverJson 服务器传来的Json数据
      * @return X轴自定义标签数组
      */
@@ -544,6 +553,8 @@ public class ConsoleActivity extends Activity implements AdapterView.OnItemClick
                     SharedPreferences.Editor editor = preferences.edit();
                     editor.putString(InfoType,"");//读取完毕后将SharedPreferences中的值设为空，避免下一次读取由于线程同步问题读到旧数据
                     editor.commit();
+
+
 
                     memoryMap = getSPMemMap(serverJson);
                     cpuMap = getSPCPUMap(serverJson);
