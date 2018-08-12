@@ -10,8 +10,8 @@ Java： jdk1.8.0_181及以下（java10可能会由于时间戳转换格式的区
 IDE： Android Studio2.2 以上。
 
 ## 项目架构
-ServerWindows是一个监控平台，由三个模块组成，本项目为Android端。  
-*本文为Android的说明书，所以平台架构不予赘述，平台架构在个人博客中说明：*[https://imdyc.com/java/serverwindows](https://imdyc.com/java/serverwindows-%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8F%AF%E8%A7%86%E5%8C%96%E7%9B%91%E6%8E%A7%E5%B9%B3%E5%8F%B0.html)
+ServerWindows是一个监控平台，由三个模块组成，本项目为其中的Android端。  
+*本文为Androidd端的说明书，所以平台架构不予赘述，平台架构在个人博客中说明：*[https://imdyc.com/java/serverwindows](https://imdyc.com/java/serverwindows-%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8F%AF%E8%A7%86%E5%8C%96%E7%9B%91%E6%8E%A7%E5%B9%B3%E5%8F%B0.html)
 
 **以下是Android端的工作流程**
 ![Android端的工作流程](http://images-1252121815.cosgz.myqcloud.com/blog/ServerWindows/TIM%E6%88%AA%E5%9B%BE20180811162634.png)
